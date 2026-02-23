@@ -129,19 +129,20 @@ function HelloWorldWidget() {
               </AutoLayout>
 
               {/* Task Text */}
-              <AutoLayout width="fill-parent" onClick={() => {
-                const copy = JSON.parse(JSON.stringify(tasks));
-                copy[index].checked = !copy[index].checked;
-                setTasks(copy);
-              }}>
-                <Text 
+              <AutoLayout width="fill-parent">
+                <Input
+                  value={task.text}
+                  onTextEditEnd={(e) => {
+                    const copy = JSON.parse(JSON.stringify(tasks));
+                    copy[index].text = e.characters;
+                    setTasks(copy);
+                  }}
                   fontSize={14} 
                   fill={task.checked ? "#888888" : "#333333"}
                   textDecoration={task.checked ? "strikethrough" : "none"}
                   width="fill-parent"
-                >
-                  {task.text}
-                </Text>
+                  inputBehavior="multiline"
+                />
               </AutoLayout>
 
               {/* Merge Up Button (only show if not the first task) */}
