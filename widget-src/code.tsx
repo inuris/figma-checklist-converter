@@ -88,24 +88,39 @@ function HelloWorldWidget() {
       </AutoLayout>
 
       {tasks.length > 0 && (
-        <AutoLayout direction="vertical" spacing={8} width="fill-parent">
+        <AutoLayout direction="vertical" spacing={0} width="fill-parent">
           {tasks.map((task, index) => (
             <AutoLayout 
               key={task.id}
-              padding={{ 
-                top: 12, 
-                bottom: 12, 
-                right: 12, 
-                left: task.isChild ? 44 : 12 
-              }} 
-              fill={task.isChild ? "#FAFAFA" : "#F5F5F5"} 
-              cornerRadius={4} 
+              direction="vertical"
               width="fill-parent"
-              verticalAlignItems="center"
-              spacing={12}
-              hoverStyle={{ fill: "#EBEBEB" }}
             >
-              {/* Custom Checkbox Box */}
+              {/* Top Border (except for the first task) */}
+              {index > 0 && (
+                <AutoLayout 
+                  width="fill-parent" 
+                  height={1} 
+                  fill={task.isChild ? undefined : "#E5E5E5"}
+                  stroke={task.isChild ? "#E5E5E5" : undefined}
+                  strokeWidth={task.isChild ? 1 : 0}
+                  strokeDashPattern={task.isChild ? [4, 4] : []}
+                />
+              )}
+              
+              <AutoLayout 
+                padding={{ 
+                  top: 12, 
+                  bottom: 12, 
+                  right: 12, 
+                  left: task.isChild ? 44 : 12 
+                }} 
+                fill={task.isChild ? "#FAFAFA" : "#F5F5F5"} 
+                width="fill-parent"
+                verticalAlignItems="start"
+                spacing={12}
+                hoverStyle={{ fill: "#EBEBEB" }}
+              >
+                {/* Custom Checkbox Box */}
               <AutoLayout
                 width={20}
                 height={20}
@@ -129,7 +144,7 @@ function HelloWorldWidget() {
               </AutoLayout>
 
               {/* Task Text */}
-              <AutoLayout width="fill-parent">
+              <AutoLayout width="fill-parent" padding={{ top: 2 }} verticalAlignItems="start">
                 <Input
                   value={task.text}
                   onTextEditEnd={(e) => {
@@ -148,7 +163,7 @@ function HelloWorldWidget() {
               {/* Merge Up Button (only show if not the first task) */}
               {index > 0 && (
                 <AutoLayout
-                  padding={8}
+                  padding={4}
                   cornerRadius={4}
                   fill="#FFFFFF"
                   hoverStyle={{ fill: "#EBEBEB" }}
@@ -166,6 +181,7 @@ function HelloWorldWidget() {
                   </Text>
                 </AutoLayout>
               )}
+              </AutoLayout>
             </AutoLayout>
           ))}
           
