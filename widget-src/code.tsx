@@ -47,7 +47,7 @@ function parseTasks(inputText: string): TaskItem[] {
   return parsedTasks;
 }
 
-function HelloWorldWidget() {
+function main() {
   const [inputText, setInputText] = useSyncedState('inputText', '')
   const [tasks, setTasks] = useSyncedState<TaskItem[]>('tasks', [])
 
@@ -217,4 +217,4 @@ function HelloWorldWidget() {
   )
 }
 
-widget.register(HelloWorldWidget)
+widget.register(main)
