@@ -6,6 +6,7 @@ interface TaskItem {
   text: string;
   checked: boolean;
   isChild?: boolean;
+  url?: string; // Add a url property to store hyperlinks
 }
 
 function parseTasks(inputText: string): TaskItem[] {
@@ -13,27 +14,32 @@ function parseTasks(inputText: string): TaskItem[] {
   const parsedTasks: TaskItem[] = [];
   
   // Matches lines starting with a number followed by /, ., or ) (e.g., "1/", "2.", "3)")
-  const parentRegex = /^\d+[\/\.\)]\s*/;
+  const parentRegex = /^\d+[/.)]\s*/;
+  // Regex to detect URLs
+  const urlRegex = /(https?:\/\/[^\s]+)/g;
 
   lines.forEach((line, index) => {
     const trimmedLine = line.trim();
+    const cleanedLine = trimmedLine.replace(/^[\s·•*-]*|^\d+[.)]\s*/, "").trim();
     const isParent = parentRegex.test(trimmedLine);
-    
+
+    let taskText = cleanedLine;
+    let taskUrl: string | undefined;
+
+    const urlMatch = cleanedLine.match(urlRegex);
+    if (urlMatch && urlMatch.length > 0) {
+      taskUrl = urlMatch[0]; // Take the first URL found
+      taskText = cleanedLine.replace(urlMatch[0], '').trim(); // Remove URL from text
+    }
+
     if (isParent || parsedTasks.length === 0) {
       // It's a parent task (or the very first line, which defaults to parent)
       parsedTasks.push({
         id: Date.now().toString() + "-" + index,
-        text: trimmedLine,
+        text: taskText,
         checked: false,
-        isChild: false
-      });
-    } else {
-      // It's a child task belonging to the previous parent
-      parsedTasks.push({
-        id: Date.now().toString() + "-" + index,
-        text: trimmedLine,
-        checked: false,
-        isChild: true
+        isChild: false,
+        url: taskUrl
       });
     }
   });
@@ -114,7 +120,7 @@ function HelloWorldWidget() {
                   right: 12, 
                   left: task.isChild ? 44 : 12 
                 }} 
-                fill={task.isChild ? "#FAFAFA" : "#F5F5F5"} 
+                fill="#FFFFFF"
                 width="fill-parent"
                 verticalAlignItems="start"
                 spacing={12}
@@ -160,10 +166,27 @@ function HelloWorldWidget() {
                 />
               </AutoLayout>
 
+              {/* Link Button (if URL exists) */}
+              {task.url && (
+                <AutoLayout
+                  padding={{ vertical: 4, horizontal: 8 }}
+                  cornerRadius={4}
+                  fill="#E0F2F7" // A light blue background for the link button
+                  hoverStyle={{ fill: "#B3E0ED" }}
+                  onClick={() => {
+                    figma.openExternal(task.url!); // Open the URL externally
+                  }}
+                >
+                  <Text fontSize={12} fill="#0288D1" fontWeight="bold">
+                    Link
+                  </Text>
+                </AutoLayout>
+              )}
+
               {/* Merge Up Button (only show if not the first task) */}
               {index > 0 && (
                 <AutoLayout
-                  padding={4}
+                  padding={{ vertical: 4, horizontal: 8 }}
                   cornerRadius={4}
                   fill="#FFFFFF"
                   hoverStyle={{ fill: "#EBEBEB" }}
@@ -185,7 +208,7 @@ function HelloWorldWidget() {
             </AutoLayout>
           ))}
           
-          <AutoLayout width="fill-parent" horizontalAlignItems="end" paddingTop={8}>
+          <AutoLayout width="fill-parent" horizontalAlignItems="end" padding={{ top: 8 }}>
             <Text fontSize={12} fill="#F24822" onClick={() => setTasks([])} hoverStyle={{ fill: "#C73014" }}>Clear All</Text>
           </AutoLayout>
         </AutoLayout>
