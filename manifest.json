@@ -1,5 +1,5 @@
 {
-  "name": "Checklist Converter",
+  "name": "Text to Checklist",
   "id": "1607614671101354962",
   "api": "1.0.0",
   "main": "dist/code.js",
