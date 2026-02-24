@@ -173,7 +173,46 @@ function HelloWorldWidget() {
                     verticalAlignItems="center"
                     onClick={() => {
                       const copy = JSON.parse(JSON.stringify(tasks));
-                      copy[index].checked = !copy[index].checked;
+                      const isNowChecked = !copy[index].checked;
+                      copy[index].checked = isNowChecked;
+
+                      if (!copy[index].isChild) {
+                        // It's a parent: check/uncheck all following children
+                        for (let i = index + 1; i < copy.length; i++) {
+                          if (copy[i].isChild) {
+                            copy[i].checked = isNowChecked;
+                          } else {
+                            break; // Stop at the next parent
+                          }
+                        }
+                      } else {
+                        // It's a child: check if all siblings are checked to update parent
+                        let parentIndex = -1;
+                        // Find the parent by going backwards
+                        for (let i = index - 1; i >= 0; i--) {
+                          if (!copy[i].isChild) {
+                            parentIndex = i;
+                            break;
+                          }
+                        }
+
+                        if (parentIndex !== -1) {
+                          let allChildrenChecked = true;
+                          // Check all children of this parent
+                          for (let i = parentIndex + 1; i < copy.length; i++) {
+                            if (copy[i].isChild) {
+                              if (!copy[i].checked) {
+                                allChildrenChecked = false;
+                                break;
+                              }
+                            } else {
+                              break; // End of this parent's children
+                            }
+                          }
+                          copy[parentIndex].checked = allChildrenChecked;
+                        }
+                      }
+
                       setTasks(copy);
                     }}
                   >
@@ -259,10 +298,6 @@ function HelloWorldWidget() {
               </AutoLayout>
             </AutoLayout>
           ))}
-
-          <AutoLayout width="fill-parent" horizontalAlignItems="end" padding={{ top: 8 }}>
-            <Text fontSize={12} fill="#F24822" onClick={() => setTasks([])} hoverStyle={{ fill: "#C73014" }}>Clear All</Text>
-          </AutoLayout>
         </AutoLayout>
       )}
     </AutoLayout>
