@@ -131,13 +131,29 @@ export function ActionBar({
         </AutoLayout>
       )}
 
-      {/* Clear All */}
+      {/* Delete Completed + Clear All */}
       {tasks.length > 0 && isRemoving && (
         <AutoLayout
           width="fill-parent"
           horizontalAlignItems="end"
           verticalAlignItems="center"
+          spacing={16}
         >
+          {tasks.some(t => t.checked) && (
+            <Text
+              fontSize={12}
+              fill={t.muted}
+              onClick={() => {
+                setTasks(tasks.filter(task => !task.checked));
+              }}
+              hoverStyle={{ fill: t.danger }}
+              fontWeight="bold"
+              fontFamily="Inter"
+              textDecoration="underline"
+            >
+              Delete Completed
+            </Text>
+          )}
           <Text
             fontSize={12}
             fill={t.danger}
