@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <clipPath id="shape">
+      <rect width="128" height="128" rx="26"/>
+    </clipPath>
+    <!-- Top-left: indigo -->
+    <radialGradient id="tl" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="110">
+      <stop offset="0%" stop-color="#6366F1" stop-opacity="1"/>
+      <stop offset="100%" stop-color="#6366F1" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Top-right: cyan -->
+    <radialGradient id="tr" gradientUnits="userSpaceOnUse" cx="128" cy="0" r="110">
+      <stop offset="0%" stop-color="#06B6D4" stop-opacity="1"/>
+      <stop offset="100%" stop-color="#06B6D4" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Bottom-left: emerald -->
+    <radialGradient id="bl" gradientUnits="userSpaceOnUse" cx="0" cy="128" r="110">
+      <stop offset="0%" stop-color="#10B981" stop-opacity="1"/>
+      <stop offset="100%" stop-color="#10B981" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Bottom-right: blue -->
+    <radialGradient id="br" gradientUnits="userSpaceOnUse" cx="128" cy="128" r="110">
+      <stop offset="0%" stop-color="#3B82F6" stop-opacity="1"/>
+      <stop offset="100%" stop-color="#3B82F6" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <g clip-path="url(#shape)">
+    <!-- Base fill to cover any gaps at center -->
+    <rect width="128" height="128" fill="#4F46E5"/>
+    <rect width="128" height="128" fill="url(#tl)"/>
+    <rect width="128" height="128" fill="url(#tr)"/>
+    <rect width="128" height="128" fill="url(#bl)"/>
+    <rect width="128" height="128" fill="url(#br)"/>
+  </g>
+
+  <!-- Checkmark -->
+  <polyline
+    points="30,66 52,88 98,40"
+    stroke="white"
+    stroke-width="14"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    fill="none"
+  />
+</svg>
