@@ -38,9 +38,12 @@ export function parseTasks(inputText: string): TaskItem[] {
     const isIndented = INDENTED_REGEX.test(line);
     const isParent = !isIndented && getLineType(trimmedLine) === parentType;
 
+    // Restore " \ " back to actual newlines (used in exported/merged tasks)
+    const text = trimmedLine.replace(/ \\ /g, '\n');
+
     return {
       id: Date.now().toString() + "-" + index,
-      text: trimmedLine,
+      text,
       checked: false,
       isChild: !isParent,
     };

@@ -3,8 +3,9 @@ const { AutoLayout, Text, SVG } = widget;
 
 import { TaskItem } from '../types';
 import { parseTasks } from '../utils/parseTasks';
+import { exportTasksAsText, buildExportHtml } from '../utils/exportTasks';
 import { getTheme } from '../utils/theme';
-import { ICON_PLUS } from '../constants/icons';
+import { ICON_PLUS, ICON_EXPORT } from '../constants/icons';
 
 interface ActionBarProps {
   tasks: TaskItem[];
@@ -152,6 +153,39 @@ export function ActionBar({
           >
             Clear All
           </Text>
+        </AutoLayout>
+      )}
+
+      {/* Export button — right-aligned, only in normal view mode */}
+      {tasks.length > 0 && !isEditing && !isRemoving && (
+        <AutoLayout
+          width="fill-parent"
+          horizontalAlignItems="end"
+          verticalAlignItems="center"
+        >
+          <AutoLayout
+            padding={8}
+            cornerRadius={8}
+            fill={t.transparent}
+            hoverStyle={{ fill: t.surface }}
+            onClick={() => {
+              return new Promise<void>((resolve) => {
+                const exportedText = exportTasksAsText(tasks);
+                const html = buildExportHtml(exportedText);
+                figma.showUI(html, {
+                  width: 480,
+                  height: 360,
+                  title: 'Export Tasks',
+                });
+                figma.ui.onmessage = () => {
+                  figma.ui.close();
+                  resolve();
+                };
+              });
+            }}
+          >
+            <SVG src={ICON_EXPORT} />
+          </AutoLayout>
         </AutoLayout>
       )}
     </AutoLayout>
