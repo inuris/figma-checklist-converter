@@ -7,7 +7,7 @@ const NUMBERED_REGEX = /^\d+[/.)]\s+/;
 // Matches: a. / b) / A. etc. (single letter sub-lists)
 const LETTERED_REGEX = /^[a-zA-Z][.)]\s+/;
 // Matches: • · * - as bullet prefix
-const BULLETED_REGEX = /^[•·*\-]\s*/;
+const BULLETED_REGEX = /^[•·*-]\s*/;
 // Matches lines indented with a tab or 2+ spaces (before trimming)
 const INDENTED_REGEX = /^(\t| {2,})/;
 
