@@ -2,7 +2,7 @@ const { widget } = figma;
 const { AutoLayout, Text, useSyncedState } = widget;
 
 import { TaskItem } from './types';
-import { COLOR_ACCENT, COLOR_BG, COLOR_BORDER, COLOR_MUTED, COLOR_SHADOW } from './constants/colors';
+import { getTheme } from './utils/theme';
 import { Header } from './components/Header';
 import { ActionBar } from './components/ActionBar';
 import { TaskRow } from './components/TaskRow';
@@ -11,29 +11,38 @@ function TextToChecklistWidget() {
   const [tasks, setTasks] = useSyncedState<TaskItem[]>('tasks', []);
   const [isEditing, setIsEditing] = useSyncedState('isEditing', false);
   const [isRemoving, setIsRemoving] = useSyncedState('isRemoving', false);
+  const [isDark, setIsDark] = useSyncedState('isDark', false);
+
+  const theme = getTheme(isDark);
 
   return (
     <AutoLayout
       direction="vertical"
       padding={0}
-      fill={COLOR_BG}
+      fill={theme.bg}
       cornerRadius={16}
-      stroke={COLOR_BORDER}
+      stroke={theme.border}
       strokeWidth={1}
       width={600}
       effect={{
         type: "drop-shadow",
-        color: COLOR_SHADOW,
+        color: theme.shadow,
         offset: { x: 0, y: 8 },
         blur: 24,
       }}
     >
-      <Header taskCount={tasks.length} completedCount={tasks.filter(t => t.checked).length} />
+      <Header
+        taskCount={tasks.length}
+        completedCount={tasks.filter(task => task.checked).length}
+        isDark={isDark}
+        setIsDark={setIsDark}
+      />
 
       <ActionBar
         tasks={tasks}
         isEditing={isEditing}
         isRemoving={isRemoving}
+        isDark={isDark}
         setTasks={setTasks}
         setIsEditing={setIsEditing}
         setIsRemoving={setIsRemoving}
@@ -49,6 +58,7 @@ function TextToChecklistWidget() {
               tasks={tasks}
               isEditing={isEditing}
               isRemoving={isRemoving}
+              isDark={isDark}
               setTasks={setTasks}
             />
           ))}
@@ -62,10 +72,10 @@ function TextToChecklistWidget() {
           direction="vertical"
           spacing={12}
         >
-          <Text fill={COLOR_MUTED} fontSize={14} fontFamily="Inter">
+          <Text fill={theme.muted} fontSize={14} fontFamily="Inter">
             Your checklist is empty
           </Text>
-          <Text fill={COLOR_ACCENT} fontSize={14} fontFamily="Inter" fontWeight="bold">
+          <Text fill={theme.accent} fontSize={14} fontFamily="Inter" fontWeight="bold">
             Start by adding some tasks
           </Text>
         </AutoLayout>

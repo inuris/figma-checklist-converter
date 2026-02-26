@@ -1,20 +1,19 @@
 const { widget } = figma;
-const { AutoLayout, Text } = widget;
+const { AutoLayout, Text, SVG } = widget;
 
-import {
-  COLOR_BG,
-  COLOR_BORDER,
-  COLOR_MUTED,
-  COLOR_PRIMARY,
-  COLOR_SUCCESS,
-} from '../constants/colors';
+import { COLOR_SUCCESS } from '../constants/colors';
+import { ICON_MOON, ICON_SUN } from '../constants/icons';
+import { getTheme } from '../utils/theme';
 
 interface HeaderProps {
   taskCount: number;
   completedCount: number;
+  isDark: boolean;
+  setIsDark: (val: boolean) => void;
 }
 
-export function Header({ taskCount, completedCount }: HeaderProps) {
+export function Header({ taskCount, completedCount, isDark, setIsDark }: HeaderProps) {
+  const t = getTheme(isDark);
   const allDone = taskCount > 0 && completedCount === taskCount;
 
   return (
@@ -22,14 +21,16 @@ export function Header({ taskCount, completedCount }: HeaderProps) {
       width="fill-parent"
       verticalAlignItems="center"
       padding={{ vertical: 20, horizontal: 24 }}
-      fill={COLOR_BG}
-      stroke={{ type: 'solid', color: COLOR_BORDER }}
+      fill={t.bg}
+      stroke={{ type: 'solid', color: t.border }}
+      spacing={12}
     >
+      {/* Title + subtitle */}
       <AutoLayout direction="vertical" spacing={4} width="fill-parent">
         <Text
           fontSize={20}
           fontWeight="bold"
-          fill={COLOR_PRIMARY}
+          fill={t.primary}
           letterSpacing={-0.5}
           fontFamily="Inter"
         >
@@ -37,17 +38,23 @@ export function Header({ taskCount, completedCount }: HeaderProps) {
         </Text>
         <Text
           fontSize={12}
-          fill={allDone ? COLOR_SUCCESS : COLOR_MUTED}
+          fill={allDone ? COLOR_SUCCESS : t.muted}
           fontFamily="Inter"
           fontWeight={allDone ? "bold" : "normal"}
         >
           {taskCount === 0
             ? "No tasks yet"
             : allDone
-            ? `All ${taskCount} tasks completed`
+            ? `All ${taskCount} tasks completed ✓`
             : `${completedCount} / ${taskCount} tasks completed`}
         </Text>
       </AutoLayout>
+
+      {/* Theme toggle — top right, bare icon only */}
+      <SVG
+        src={isDark ? ICON_SUN : ICON_MOON}
+        onClick={() => setIsDark(!isDark)}
+      />
     </AutoLayout>
   );
 }

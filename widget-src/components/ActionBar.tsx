@@ -3,26 +3,14 @@ const { AutoLayout, Text, SVG } = widget;
 
 import { TaskItem } from '../types';
 import { parseTasks } from '../utils/parseTasks';
-import {
-  COLOR_ACCENT,
-  COLOR_ACCENT_HOVER,
-  COLOR_ACCENT_SHADOW,
-  COLOR_DANGER,
-  COLOR_DANGER_HOVER,
-  COLOR_EDIT_ACTIVE_BG,
-  COLOR_HOVER_BG,
-  COLOR_MUTED,
-  COLOR_REMOVE_ACTIVE_BG,
-  COLOR_SURFACE,
-  COLOR_TRANSPARENT,
-  COLOR_WHITE,
-} from '../constants/colors';
+import { getTheme } from '../utils/theme';
 import { ICON_PLUS } from '../constants/icons';
 
 interface ActionBarProps {
   tasks: TaskItem[];
   isEditing: boolean;
   isRemoving: boolean;
+  isDark: boolean;
   setTasks: (tasks: TaskItem[]) => void;
   setIsEditing: (val: boolean) => void;
   setIsRemoving: (val: boolean) => void;
@@ -32,10 +20,12 @@ export function ActionBar({
   tasks,
   isEditing,
   isRemoving,
+  isDark,
   setTasks,
   setIsEditing,
   setIsRemoving,
 }: ActionBarProps) {
+  const t = getTheme(isDark);
   return (
     <AutoLayout
       width="fill-parent"
@@ -43,16 +33,16 @@ export function ActionBar({
       horizontalAlignItems="start"
       spacing={12}
       padding={{ vertical: 16, horizontal: 24 }}
-      fill={COLOR_HOVER_BG}
+      fill={t.bgHover}
     >
       {/* Add Items Button */}
       <AutoLayout
         padding={{ vertical: 8, horizontal: 16 }}
         cornerRadius={8}
-        fill={COLOR_ACCENT}
+        fill={t.accent}
         effect={{
           type: "drop-shadow",
-          color: COLOR_ACCENT_SHADOW,
+          color: t.accentShadow,
           offset: { x: 0, y: 4 },
           blur: 8,
         }}
@@ -77,12 +67,12 @@ export function ActionBar({
             };
           });
         }}
-        hoverStyle={{ fill: COLOR_ACCENT_HOVER }}
+        hoverStyle={{ fill: t.accentHover }}
         verticalAlignItems="center"
         spacing={8}
       >
         <SVG src={ICON_PLUS} />
-        <Text fontSize={14} fontWeight="bold" fill={COLOR_WHITE} fontFamily="Inter">
+        <Text fontSize={14} fontWeight="bold" fill={t.white} fontFamily="Inter">
           Add Items
         </Text>
       </AutoLayout>
@@ -100,14 +90,14 @@ export function ActionBar({
             }}
             padding={{ vertical: 8, horizontal: 12 }}
             cornerRadius={8}
-            stroke={isEditing ? COLOR_ACCENT : undefined}
-            fill={isEditing ? COLOR_EDIT_ACTIVE_BG : COLOR_TRANSPARENT}
-            hoverStyle={{ fill: COLOR_SURFACE }}
+            stroke={isEditing ? t.accent : undefined}
+            fill={isEditing ? t.editActiveBg : t.transparent}
+            hoverStyle={{ fill: t.surface }}
           >
             <Text
               fontSize={13}
               fontWeight="medium"
-              fill={isEditing ? COLOR_ACCENT : COLOR_MUTED}
+              fill={isEditing ? t.accent : t.muted}
               fontFamily="Inter"
             >
               Edit
@@ -124,14 +114,14 @@ export function ActionBar({
             }}
             padding={{ vertical: 8, horizontal: 12 }}
             cornerRadius={8}
-            stroke={isRemoving ? COLOR_DANGER : undefined}
-            fill={isRemoving ? COLOR_REMOVE_ACTIVE_BG : COLOR_TRANSPARENT}
-            hoverStyle={{ fill: COLOR_REMOVE_ACTIVE_BG }}
+            stroke={isRemoving ? t.danger : undefined}
+            fill={isRemoving ? t.removeActiveBg : t.transparent}
+            hoverStyle={{ fill: t.removeActiveBg }}
           >
             <Text
               fontSize={13}
               fontWeight="medium"
-              fill={isRemoving ? COLOR_DANGER : COLOR_MUTED}
+              fill={isRemoving ? t.danger : t.muted}
               fontFamily="Inter"
             >
               Delete
@@ -149,13 +139,13 @@ export function ActionBar({
         >
           <Text
             fontSize={12}
-            fill={COLOR_DANGER}
+            fill={t.danger}
             onClick={() => {
               setTasks([]);
               setIsEditing(false);
               setIsRemoving(false);
             }}
-            hoverStyle={{ fill: COLOR_DANGER_HOVER }}
+            hoverStyle={{ fill: t.dangerHover }}
             fontWeight="bold"
             fontFamily="Inter"
             textDecoration="underline"

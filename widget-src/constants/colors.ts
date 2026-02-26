@@ -23,3 +23,23 @@ export const COLOR_TASK_CHECKED = "#9CA3AF";      // Gray 400  — checked task 
 export const COLOR_TASK_CHILD = "#4B5563";        // Gray 600  — child task text
 export const COLOR_LINK_BORDER = "#BFDBFE";       // Blue 200  — link chip border
 export const COLOR_LINK_HOVER = "#DBEAFE";        // Blue 100  — link chip hover
+
+// ─── Dark theme ───────────────────────────────────────────────────────────────
+export const DARK_COLOR_BG = "#1E293B";                 // Slate 800
+export const DARK_COLOR_HOVER_BG = "#0F172A";           // Slate 900 — action bar + row hover
+export const DARK_COLOR_PRIMARY = "#F1F5F9";            // Slate 100
+export const DARK_COLOR_MUTED = "#94A3B8";              // Slate 400
+export const DARK_COLOR_BORDER = "#334155";             // Slate 700
+export const DARK_COLOR_SURFACE = "#475569";            // Slate 600
+export const DARK_COLOR_TASK_CHILD = "#CBD5E1";         // Slate 300
+export const DARK_COLOR_TASK_CHECKED = "#475569";       // Slate 600
+export const DARK_COLOR_CHECKBOX_UNCHECKED = "#475569"; // Slate 600
+export const DARK_COLOR_CHECKBOX_HOVER = "#64748B";     // Slate 500
+export const DARK_COLOR_EDIT_ACTIVE_BG = "#1E3A5F";     // Deep blue — link chip + edit bg
+export const DARK_COLOR_REMOVE_ACTIVE_BG = "#450A0A";   // Dark red  — remove toggle
+export const DARK_COLOR_REMOVE_BTN_BG = "#7F1D1D";      // Red 900
+export const DARK_COLOR_REMOVE_BTN_HOVER = "#991B1B";   // Red 800
+export const DARK_COLOR_LINK_BORDER = "#1D4ED8";        // Blue 700
+export const DARK_COLOR_LINK_HOVER = "#1E3A5F";         // Deep blue
+export const DARK_COLOR_FLOAT_BTN = "#334155";          // Slate 700 — merge/float button bg
+export const DARK_COLOR_SHADOW = "#00000066";           // Black 40%
