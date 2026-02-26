@@ -28,7 +28,7 @@ function TextToChecklistWidget() {
         blur: 24,
       }}
     >
-      <Header taskCount={tasks.length} />
+      <Header taskCount={tasks.length} completedCount={tasks.filter(t => t.checked).length} />
 
       <ActionBar
         tasks={tasks}

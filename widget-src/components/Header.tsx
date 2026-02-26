@@ -10,9 +10,12 @@ import {
 
 interface HeaderProps {
   taskCount: number;
+  completedCount: number;
 }
 
-export function Header({ taskCount }: HeaderProps) {
+export function Header({ taskCount, completedCount }: HeaderProps) {
+  const allDone = taskCount > 0 && completedCount === taskCount;
+
   return (
     <AutoLayout
       width="fill-parent"
@@ -31,8 +34,17 @@ export function Header({ taskCount }: HeaderProps) {
         >
           Checklist
         </Text>
-        <Text fontSize={12} fill={COLOR_MUTED} fontFamily="Inter">
-          {taskCount} {taskCount === 1 ? 'task' : 'tasks'} remaining
+        <Text
+          fontSize={12}
+          fill={allDone ? "#22C55E" : COLOR_MUTED}
+          fontFamily="Inter"
+          fontWeight={allDone ? "bold" : "normal"}
+        >
+          {taskCount === 0
+            ? "No tasks yet"
+            : allDone
+            ? `All ${taskCount} tasks completed`
+            : `${completedCount} / ${taskCount} tasks completed`}
         </Text>
       </AutoLayout>
     </AutoLayout>
