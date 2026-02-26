@@ -1,5 +1,5 @@
 const { widget } = figma;
-const { AutoLayout, SVG, Input } = widget;
+const { AutoLayout, SVG, Input, Text } = widget;
 
 import { TaskItem } from '../types';
 import {
@@ -11,10 +11,12 @@ import {
 import {
   ICON_CHECK,
   ICON_INDENT,
+  ICON_LINK,
   ICON_MERGE,
   ICON_OUTDENT,
   ICON_REMOVE,
 } from '../constants/icons';
+import { extractUrls, formatUrlLabel } from '../utils/parseUrls';
 
 interface TaskRowProps {
   task: TaskItem;
@@ -157,27 +159,70 @@ export function TaskRow({
           </AutoLayout>
         )}
 
-        {/* Task Text Input */}
-        <AutoLayout width="fill-parent" padding={{ top: 0 }} verticalAlignItems="start">
-          <Input
-            value={task.text}
-            onTextEditEnd={(e) => {
-              const copy: TaskItem[] = JSON.parse(JSON.stringify(tasks));
-              if (e.characters.trim().length === 0) {
-                copy.splice(index, 1);
-              } else {
-                copy[index].text = e.characters;
-              }
-              setTasks(copy);
-            }}
-            fontSize={15}
-            fontWeight={!task.isChild ? 'semi-bold' : 'normal'}
-            fontFamily="Inter"
-            fill={task.checked ? "#9CA3AF" : task.isChild ? "#4B5563" : "#111827"}
-            textDecoration={task.checked ? "strikethrough" : "none"}
-            width="fill-parent"
-            inputBehavior="multiline"
-          />
+        {/* Task Text + URL chips */}
+        <AutoLayout direction="vertical" width="fill-parent" spacing={6}>
+
+          {/* Text: display-only in view mode, editable Input in edit mode */}
+          {isEditing ? (
+            <Input
+              value={task.text}
+              onTextEditEnd={(e) => {
+                const copy: TaskItem[] = JSON.parse(JSON.stringify(tasks));
+                if (e.characters.trim().length === 0) {
+                  copy.splice(index, 1);
+                } else {
+                  copy[index].text = e.characters;
+                }
+                setTasks(copy);
+              }}
+              fontSize={15}
+              fontWeight={!task.isChild ? 'semi-bold' : 'normal'}
+              fontFamily="Inter"
+              fill={task.checked ? "#9CA3AF" : task.isChild ? "#4B5563" : "#111827"}
+              textDecoration={task.checked ? "strikethrough" : "none"}
+              width="fill-parent"
+              inputBehavior="multiline"
+            />
+          ) : (
+            <Text
+              fontSize={15}
+              fontWeight={!task.isChild ? 'semi-bold' : 'normal'}
+              fontFamily="Inter"
+              fill={task.checked ? "#9CA3AF" : task.isChild ? "#4B5563" : "#111827"}
+              textDecoration={task.checked ? "strikethrough" : "none"}
+              width="fill-parent"
+            >
+              {task.text}
+            </Text>
+          )}
+
+          {/* URL chips — shown whenever URLs are detected in the task text */}
+          {extractUrls(task.text).map((url) => (
+            <AutoLayout
+              key={url}
+              direction="horizontal"
+              spacing={5}
+              verticalAlignItems="center"
+              padding={{ vertical: 3, horizontal: 8 }}
+              cornerRadius={6}
+              fill="#EFF6FF"
+              stroke="#BFDBFE"
+              strokeWidth={1}
+              hoverStyle={{ fill: "#DBEAFE" }}
+            >
+              <Text
+                fontSize={12}
+                fontFamily="Inter"
+                fill={COLOR_ACCENT}
+                textDecoration="underline"
+                href={url}
+              >
+                {formatUrlLabel(url)}
+              </Text>
+              <SVG src={ICON_LINK} />
+            </AutoLayout>
+          ))}
+
         </AutoLayout>
 
         {/* Merge Up button (edit mode only, not first item) */}
