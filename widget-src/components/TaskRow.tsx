@@ -165,11 +165,41 @@ export function TaskRow({
             <Input
               value={task.text}
               onTextEditEnd={(e) => {
+                const newText = e.characters;
                 const copy: TaskItem[] = JSON.parse(JSON.stringify(tasks));
-                if (e.characters.trim().length === 0) {
-                  copy.splice(index, 1);
+
+                // Check for double newline (Enter x2) to split tasks
+                if (newText.includes('\n\n')) {
+                  const parts = newText.split('\n\n');
+                  // Update current task with first part
+                  copy[index].text = parts[0].trim();
+                  
+                  // Insert new tasks for subsequent parts
+                  let insertOffset = 1;
+                  for (let i = 1; i < parts.length; i++) {
+                    const partText = parts[i].trim();
+                    if (partText.length > 0) {
+                      copy.splice(index + insertOffset, 0, {
+                        id: Date.now().toString() + "-" + index + "-" + i,
+                        text: partText,
+                        checked: false,
+                        isChild: task.isChild
+                      });
+                      insertOffset++;
+                    }
+                  }
+                  
+                  // If first part became empty, remove it
+                  if (copy[index].text.length === 0) {
+                     copy.splice(index, 1);
+                  }
                 } else {
-                  copy[index].text = e.characters;
+                  // Normal update
+                  if (newText.trim().length === 0) {
+                    copy.splice(index, 1);
+                  } else {
+                    copy[index].text = newText;
+                  } 
                 }
                 setTasks(copy);
               }}
