@@ -48,22 +48,25 @@ export function ActionBar({
           blur: 8,
         }}
         onClick={() => {
-          figma.showUI(__html__, {
-            width: 500,
-            height: 400,
-            title: "Start typing or paste your list...",
-          });
-          figma.ui.onmessage = (msg) => {
-            if (msg.type === 'add-tasks' && msg.text) {
-              try {
-                const newTasks = parseTasks(msg.text);
-                setTasks([...tasks, ...newTasks]);
-              } catch (e) {
-                console.error('Error parsing tasks:', e);
+          return new Promise<void>((resolve) => {
+            figma.showUI(__html__, {
+              width: 500,
+              height: 400,
+              title: "Start typing or paste your list...",
+            });
+            figma.ui.onmessage = (msg) => {
+              if (msg.type === 'add-tasks' && msg.text) {
+                try {
+                  const newTasks = parseTasks(msg.text);
+                  setTasks([...tasks, ...newTasks]);
+                } catch (e) {
+                  console.error('Error parsing tasks:', e);
+                }
+                figma.ui.close();
+                resolve();
               }
-              figma.ui.close();
-            }
-          };
+            };
+          });
         }}
         hoverStyle={{ fill: t.accentHover }}
         verticalAlignItems="center"
@@ -182,12 +185,18 @@ export function ActionBar({
             fill={t.transparent}
             hoverStyle={{ fill: t.surface }}
             onClick={() => {
-              const exportedText = exportTasksAsText(tasks);
-              const html = buildExportHtml(exportedText);
-              figma.showUI(html, {
-                width: 480,
-                height: 360,
-                title: 'Export Tasks',
+              return new Promise<void>((resolve) => {
+                const exportedText = exportTasksAsText(tasks);
+                const html = buildExportHtml(exportedText);
+                figma.showUI(html, {
+                  width: 480,
+                  height: 360,
+                  title: 'Export Tasks',
+                });
+                figma.ui.onmessage = () => {
+                  figma.ui.close();
+                  resolve();
+                };
               });
             }}
           >
