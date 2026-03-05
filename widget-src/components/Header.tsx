@@ -58,7 +58,7 @@ export function Header({ taskCount, completedCount, isDark, setIsDark, onUndo, c
         {onUndo && (
           <AutoLayout
             name="UndoHeaderButton"
-            padding={6}
+            padding={8}
             cornerRadius={999}
             fill={t.transparent}
             hoverStyle={{ fill: t.bgHover }}
@@ -70,11 +70,17 @@ export function Header({ taskCount, completedCount, isDark, setIsDark, onUndo, c
             <SVG src={ICON_UNDO} />
           </AutoLayout>
         )}
-        <AutoLayout padding={8} name="ThemeToggle">
-          <SVG
-            src={isDark ? ICON_SUN : ICON_MOON}
-            onClick={() => setIsDark(!isDark)}
-          />
+        <AutoLayout
+          name="ThemeToggle"
+          padding={8}
+          cornerRadius={999}
+          fill={t.transparent}
+          hoverStyle={{ fill: t.bgHover }}
+          horizontalAlignItems="center"
+          verticalAlignItems="center"
+          onClick={() => setIsDark(!isDark)}
+        >
+          <SVG src={isDark ? ICON_SUN : ICON_MOON} />
         </AutoLayout>
       </AutoLayout>
 
