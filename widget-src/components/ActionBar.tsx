@@ -5,7 +5,7 @@ import { TaskItem } from '../types';
 import { parseTasks } from '../utils/parseTasks';
 import { exportTasksAsText, buildExportHtml } from '../utils/exportTasks';
 import { getTheme } from '../utils/theme';
-import { ICON_PLUS, ICON_EXPORT, ICON_UNDO, ICON_ARROW_UP_WHITE, ICON_ARROW_DOWN_WHITE } from '../constants/icons';
+import { ICON_PLUS, ICON_EXPORT, ICON_ARROW_UP_WHITE, ICON_ARROW_DOWN_WHITE } from '../constants/icons';
 
 interface ActionBarProps {
   tasks: TaskItem[];
@@ -20,8 +20,6 @@ interface ActionBarProps {
   moveSelectedDown?: () => void;
   canMoveUp?: boolean;
   canMoveDown?: boolean;
-  onUndo?: () => void;
-  canUndo?: boolean;
 }
 
 export function ActionBar({
@@ -37,8 +35,6 @@ export function ActionBar({
   moveSelectedDown,
   canMoveUp = false,
   canMoveDown = false,
-  onUndo,
-  canUndo = false,
 }: ActionBarProps) {
   const t = getTheme(isDark);
 
@@ -286,33 +282,22 @@ export function ActionBar({
         </AutoLayout>
       )}
 
-      {/* Undo + Move buttons — right-aligned when Edit mode (same position as Export) */}
+      {/* Move buttons — right-aligned when Edit mode (same position as Export) */}
       {tasks.length > 0 && isEditing && (
         <AutoLayout
           width="fill-parent"
           horizontalAlignItems="end"
           verticalAlignItems="center"
-          name="UndoAndMoveWrap"
+          name="MoveButtonsWrap"
         >
           <AutoLayout
-            name="UndoAndMoveRow"
+            name="MoveButtonsRow"
             direction="horizontal"
             spacing={8}
             verticalAlignItems="center"
           >
-            <AutoLayout
-              name="UndoButtonContainer"
-              padding={8}
-              cornerRadius={8}
-              fill={t.transparent}
-              hoverStyle={{ fill: t.surface }}
-              opacity={canUndo ? 1 : 0.5}
-              onClick={canUndo ? onUndo : undefined}
-            >
-              <SVG src={ICON_UNDO} />
-            </AutoLayout>
             {moveSelectedUp != null && moveSelectedDown != null && (
-              <AutoLayout name="MoveButtonsRow" spacing={8} verticalAlignItems="center">
+              <>
                 <AutoLayout
                   name="MoveUpButton"
                   width={28}
@@ -339,7 +324,7 @@ export function ActionBar({
                 >
                   <SVG name="MoveDownIcon" src={ICON_ARROW_DOWN_WHITE} />
                 </AutoLayout>
-              </AutoLayout>
+              </>
             )}
           </AutoLayout>
         </AutoLayout>

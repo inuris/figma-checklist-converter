@@ -5,8 +5,8 @@ import { TaskItem } from '../types';
 import { getTheme } from '../utils/theme';
 import {
   ICON_CHECK,
-  ICON_CHECK_MOVE_LIGHT,
-  ICON_CHECK_MOVE_DARK,
+  ICON_MOVE_ARROW_LIGHT,
+  ICON_MOVE_ARROW_DARK,
   ICON_INDENT,
   ICON_LINK,
   ICON_MERGE,
@@ -290,7 +290,7 @@ export function TaskRow({
             hoverStyle={!isMoveSelected ? { stroke: t.checkboxHover } : {}}
           >
             {isMoveSelected && (
-              <SVG name="MoveCheckIcon" src={isDark ? ICON_CHECK_MOVE_DARK : ICON_CHECK_MOVE_LIGHT} />
+              <SVG name="MoveArrowIcon" src={isDark ? ICON_MOVE_ARROW_DARK : ICON_MOVE_ARROW_LIGHT} />
             )}
           </AutoLayout>
         )}

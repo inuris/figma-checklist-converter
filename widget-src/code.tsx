@@ -117,6 +117,8 @@ function TextToChecklistWidget() {
           completedCount={tasks.filter(task => task.checked).length}
           isDark={isDark}
           setIsDark={setIsDark}
+          onUndo={undo}
+          canUndo={canUndo}
         />
 
         <ActionBar
@@ -132,8 +134,6 @@ function TextToChecklistWidget() {
           moveSelectedDown={moveSelectedDown}
           canMoveUp={canMoveUp}
           canMoveDown={canMoveDown}
-          onUndo={undo}
-          canUndo={canUndo}
         />
 
         {tasks.length > 0 ? (
