@@ -117,25 +117,20 @@ function TextToChecklistWidget() {
           setIsRemoving={setIsRemoving}
           setIsMoving={setIsMoving}
           setMoveSelectedIds={setMoveSelectedIds}
+          moveSelectedUp={moveSelectedUp}
+          moveSelectedDown={moveSelectedDown}
+          canMoveUp={canMoveUp}
+          canMoveDown={canMoveDown}
         />
 
         {tasks.length > 0 ? (
-          <AutoLayout direction="vertical" spacing={0} width="fill-parent" padding={{ bottom: 12 }} name="TasksContainer">
-            {isMoving && (
-              <AutoLayout
-                name="MoveUpButton"
-                width="fill-parent"
-                padding={{ vertical: 10, horizontal: 24 }}
-                horizontalAlignItems="center"
-                fill={theme.bgHover}
-                opacity={canMoveUp ? 1 : 0.5}
-                onClick={canMoveUp ? moveSelectedUp : undefined}
-              >
-                <Text fontSize={13} fontWeight="medium" fill={theme.muted} fontFamily="Inter">
-                  ↑ Move selected up
-                </Text>
-              </AutoLayout>
-            )}
+          <AutoLayout
+            direction="vertical"
+            spacing={0}
+            width="fill-parent"
+            padding={{ bottom: 12 }}
+            name="TasksContainer"
+          >
             <AutoLayout direction="vertical" spacing={0} width="fill-parent" name="Tasks">
               {tasks.map((task, index) => (
                 <TaskRow
@@ -153,21 +148,6 @@ function TextToChecklistWidget() {
                 />
               ))}
             </AutoLayout>
-            {isMoving && (
-              <AutoLayout
-                name="MoveDownButton"
-                width="fill-parent"
-                padding={{ vertical: 10, horizontal: 24 }}
-                horizontalAlignItems="center"
-                fill={theme.bgHover}
-                opacity={canMoveDown ? 1 : 0.5}
-                onClick={canMoveDown ? moveSelectedDown : undefined}
-              >
-                <Text fontSize={13} fontWeight="medium" fill={theme.muted} fontFamily="Inter">
-                  ↓ Move selected down
-                </Text>
-              </AutoLayout>
-            )}
           </AutoLayout>
         ) : (
           <AutoLayout

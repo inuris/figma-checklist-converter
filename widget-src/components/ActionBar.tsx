@@ -5,7 +5,7 @@ import { TaskItem } from '../types';
 import { parseTasks } from '../utils/parseTasks';
 import { exportTasksAsText, buildExportHtml } from '../utils/exportTasks';
 import { getTheme } from '../utils/theme';
-import { ICON_PLUS, ICON_EXPORT } from '../constants/icons';
+import { ICON_PLUS, ICON_EXPORT, ICON_ARROW_UP_WHITE, ICON_ARROW_DOWN_WHITE } from '../constants/icons';
 
 interface ActionBarProps {
   tasks: TaskItem[];
@@ -18,6 +18,10 @@ interface ActionBarProps {
   setIsRemoving: (val: boolean) => void;
   setIsMoving: (val: boolean) => void;
   setMoveSelectedIds: (ids: string[]) => void;
+  moveSelectedUp?: () => void;
+  moveSelectedDown?: () => void;
+  canMoveUp?: boolean;
+  canMoveDown?: boolean;
 }
 
 export function ActionBar({
@@ -31,6 +35,10 @@ export function ActionBar({
   setIsRemoving,
   setIsMoving,
   setMoveSelectedIds,
+  moveSelectedUp,
+  moveSelectedDown,
+  canMoveUp = false,
+  canMoveDown = false,
 }: ActionBarProps) {
   const t = getTheme(isDark);
 
@@ -384,21 +392,56 @@ export function ActionBar({
       )}
       </AutoLayout>
 
-      {/* Tooltip bar: simple guide for current mode */}
+      {/* Tooltip bar: simple guide for current mode; Move mode adds Up/Down buttons aligned right */}
       {tasks.length > 0 && modeTooltip && (
         <AutoLayout
           name="ModeTooltipBar"
           width="fill-parent"
+          direction="horizontal"
+          spacing={12}
+          verticalAlignItems="center"
           padding={{ top: 4, bottom: 0, left: 0, right: 0 }}
         >
-          <Text
-            name="ModeTooltipText"
-            fontSize={12}
-            fill={t.muted}
-            fontFamily="Inter"
-          >
-            {modeTooltip}
-          </Text>
+          <AutoLayout width="fill-parent" name="ModeTooltipTextWrap">
+            <Text
+              name="ModeTooltipText"
+              fontSize={12}
+              fill={t.muted}
+              fontFamily="Inter"
+            >
+              {modeTooltip}
+            </Text>
+          </AutoLayout>
+          {isMoving && moveSelectedUp != null && moveSelectedDown != null && (
+            <AutoLayout name="MoveButtonsRow" spacing={8} verticalAlignItems="center">
+              <AutoLayout
+                name="MoveUpButton"
+                width={28}
+                height={28}
+                cornerRadius={6}
+                fill={t.move}
+                horizontalAlignItems="center"
+                verticalAlignItems="center"
+                opacity={canMoveUp ? 1 : 0.5}
+                onClick={canMoveUp ? moveSelectedUp : undefined}
+              >
+                <SVG name="MoveUpIcon" src={ICON_ARROW_UP_WHITE} />
+              </AutoLayout>
+              <AutoLayout
+                name="MoveDownButton"
+                width={28}
+                height={28}
+                cornerRadius={6}
+                fill={t.move}
+                horizontalAlignItems="center"
+                verticalAlignItems="center"
+                opacity={canMoveDown ? 1 : 0.5}
+                onClick={canMoveDown ? moveSelectedDown : undefined}
+              >
+                <SVG name="MoveDownIcon" src={ICON_ARROW_DOWN_WHITE} />
+              </AutoLayout>
+            </AutoLayout>
+          )}
         </AutoLayout>
       )}
     </AutoLayout>
