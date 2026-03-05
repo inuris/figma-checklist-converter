@@ -38,10 +38,18 @@ export function ActionBar({
 }: ActionBarProps) {
   const t = getTheme(isDark);
 
-  const modeTooltip =
-    isEditing ? 'Update text, double Enter to split. Use ↑ / ↓ to reorder checked tasks.'
-    : isRemoving ? 'Click × to delete a task.'
-    : null;
+  const modeTooltip: { left: string; right: string } | null =
+    isEditing
+      ? {
+          left: 'Update text, double Enter to split',
+          right: 'Check then use ↑ / ↓ to reorder tasks',
+        }
+      : isRemoving
+      ? {
+          left: 'Click × to delete a task',
+          right: ' ',
+        }
+      : null;
 
   return (
     <AutoLayout
@@ -370,20 +378,29 @@ export function ActionBar({
           name="ModeTooltipBar"
           width="fill-parent"
           direction="horizontal"
-          spacing={12}
+          spacing="auto"
           verticalAlignItems="center"
           padding={{ top: 4, bottom: 0, left: 0, right: 0 }}
         >
-          <AutoLayout width="fill-parent" name="ModeTooltipTextWrap">
+          <Text
+            name="ModeTooltipTextLeft"
+            fontSize={12}
+            fill={t.muted}
+            fontFamily="Inter"
+          >
+            {modeTooltip.left}
+          </Text>
+
+          {modeTooltip.right && (
             <Text
-              name="ModeTooltipText"
+              name="ModeTooltipTextRight"
               fontSize={12}
               fill={t.muted}
               fontFamily="Inter"
             >
-              {modeTooltip}
+              {modeTooltip.right}
             </Text>
-          </AutoLayout>
+          )}
         </AutoLayout>
       )}
     </AutoLayout>
