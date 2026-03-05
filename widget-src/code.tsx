@@ -29,21 +29,20 @@ function TextToChecklistWidget() {
   const [tasks, setTasks] = useSyncedState<TaskItem[]>('tasks', []);
   const [isEditing, setIsEditing] = useSyncedState('isEditing', false);
   const [isRemoving, setIsRemoving] = useSyncedState('isRemoving', false);
-  const [isMoving, setIsMoving] = useSyncedState('isMoving', false);
   const [moveSelectedIds, setMoveSelectedIds] = useSyncedState<string[]>('moveSelectedIds', []);
   const [isDark, setIsDark] = useSyncedState('isDark', false);
 
   const theme = getTheme(isDark);
 
-  // Indices of tasks that are checked for move (0-based)
+  // Indices of tasks that are checked for move (0-based) — used when Edit mode is on
   const selectedIndices = tasks
     .map((t, i) => (moveSelectedIds.includes(t.id) ? i : -1))
     .filter((i) => i >= 0)
     .sort((a, b) => a - b);
 
-  // Buttons disabled only when no tasks are checked for move
-  const canMoveUp = isMoving && moveSelectedIds.length > 0;
-  const canMoveDown = isMoving && moveSelectedIds.length > 0;
+  // Move buttons enabled when at least one task is checked for move
+  const canMoveUp = moveSelectedIds.length > 0;
+  const canMoveDown = moveSelectedIds.length > 0;
 
   // Move each checked task up by 1 row; tasks at top (index 0) stay
   const moveSelectedUp = () => {
@@ -110,12 +109,10 @@ function TextToChecklistWidget() {
           tasks={tasks}
           isEditing={isEditing}
           isRemoving={isRemoving}
-          isMoving={isMoving}
           isDark={isDark}
           setTasks={setTasks}
           setIsEditing={setIsEditing}
           setIsRemoving={setIsRemoving}
-          setIsMoving={setIsMoving}
           setMoveSelectedIds={setMoveSelectedIds}
           moveSelectedUp={moveSelectedUp}
           moveSelectedDown={moveSelectedDown}
@@ -138,10 +135,9 @@ function TextToChecklistWidget() {
                   task={task}
                   index={index}
                   tasks={tasks}
-                  isEditing={isEditing}
-                  isRemoving={isRemoving}
-                  isMoving={isMoving}
-                  moveSelectedIds={moveSelectedIds}
+                isEditing={isEditing}
+                isRemoving={isRemoving}
+                moveSelectedIds={moveSelectedIds}
                   onToggleMoveSelected={toggleMoveSelected}
                   isDark={isDark}
                   setTasks={setTasks}

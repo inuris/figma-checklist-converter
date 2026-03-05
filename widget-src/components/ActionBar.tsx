@@ -11,12 +11,10 @@ interface ActionBarProps {
   tasks: TaskItem[];
   isEditing: boolean;
   isRemoving: boolean;
-  isMoving: boolean;
   isDark: boolean;
   setTasks: (tasks: TaskItem[]) => void;
   setIsEditing: (val: boolean) => void;
   setIsRemoving: (val: boolean) => void;
-  setIsMoving: (val: boolean) => void;
   setMoveSelectedIds: (ids: string[]) => void;
   moveSelectedUp?: () => void;
   moveSelectedDown?: () => void;
@@ -28,12 +26,10 @@ export function ActionBar({
   tasks,
   isEditing,
   isRemoving,
-  isMoving,
   isDark,
   setTasks,
   setIsEditing,
   setIsRemoving,
-  setIsMoving,
   setMoveSelectedIds,
   moveSelectedUp,
   moveSelectedDown,
@@ -43,9 +39,8 @@ export function ActionBar({
   const t = getTheme(isDark);
 
   const modeTooltip =
-    isEditing ? 'Edit: change text, indent, or merge tasks.'
-    : isMoving ? 'Move: check tasks on the right, then use ↑ / ↓ to reorder.'
-    : isRemoving ? 'Delete: click × on a task to remove it.'
+    isEditing ? 'Update text, double Enter to split. Use ↑ / ↓ to reorder checked tasks.'
+    : isRemoving ? 'Click × to delete a task.'
     : null;
 
   return (
@@ -117,7 +112,8 @@ export function ActionBar({
               const next = !isEditing;
               if (next) {
                 setIsRemoving(false);
-                setIsMoving(false);
+              } else {
+                setMoveSelectedIds([]);
               }
               setIsEditing(!isEditing);
             }}
@@ -129,7 +125,7 @@ export function ActionBar({
                 cornerRadius={999}
                 spacing={10}
                 fill={t.white}
-                stroke={t.accent}
+                stroke={t.move}
                 verticalAlignItems="center"
               >
                 <AutoLayout
@@ -137,12 +133,12 @@ export function ActionBar({
                   width={20}
                   height={20}
                   cornerRadius={999}
-                  fill={t.accent}
+                  fill={t.move}
                 />
                 <Text
                   fontSize={14}
                   fontWeight="bold"
-                  fill={t.accent}
+                  fill={t.move}
                   fontFamily="Inter"
                 >
                   Edit
@@ -184,7 +180,6 @@ export function ActionBar({
               const next = !isRemoving;
               if (next) {
                 setIsEditing(false);
-                setIsMoving(false);
               }
               setIsRemoving(!isRemoving);
             }}
@@ -243,75 +238,6 @@ export function ActionBar({
               </AutoLayout>
             )}
           </AutoLayout>
-
-          {/* Move "capsule" switch */}
-          <AutoLayout
-            name="MoveToggleGroup"
-            onClick={() => {
-              const next = !isMoving;
-              if (next) {
-                setIsEditing(false);
-                setIsRemoving(false);
-              } else {
-                setMoveSelectedIds([]);
-              }
-              setIsMoving(next);
-            }}
-          >
-            {isMoving ? (
-              <AutoLayout
-                name="MoveToggleOn"
-                padding={{ top: 8, bottom: 8, left: 8, right: 16 }}
-                cornerRadius={999}
-                spacing={10}
-                fill={t.white}
-                stroke={t.move}
-                verticalAlignItems="center"
-              >
-                <AutoLayout
-                  name="MoveKnobOn"
-                  width={20}
-                  height={20}
-                  cornerRadius={999}
-                  fill={t.move}
-                />
-                <Text
-                  fontSize={14}
-                  fontWeight="bold"
-                  fill={t.move}
-                  fontFamily="Inter"
-                >
-                  Move
-                </Text>
-              </AutoLayout>
-            ) : (
-              <AutoLayout
-                name="MoveToggleOff"
-                padding={{ top: 8, bottom: 8, left: 16, right: 8 }}
-                cornerRadius={999}
-                spacing={10}
-                fill={t.white}
-                stroke={t.border}
-                verticalAlignItems="center"
-              >
-                <Text
-                  fontSize={14}
-                  fontWeight="bold"
-                  fill={t.muted}
-                  fontFamily="Inter"
-                >
-                  Move
-                </Text>
-                <AutoLayout
-                  name="MoveKnobOff"
-                  width={20}
-                  height={20}
-                  cornerRadius={999}
-                  fill={t.border}
-                />
-              </AutoLayout>
-            )}
-          </AutoLayout>
         </AutoLayout>
       )}
 
@@ -345,7 +271,6 @@ export function ActionBar({
               setTasks([]);
               setIsEditing(false);
               setIsRemoving(false);
-              setIsMoving(false);
             }}
             hoverStyle={{ fill: t.dangerHover }}
             fontWeight="bold"
@@ -412,7 +337,7 @@ export function ActionBar({
               {modeTooltip}
             </Text>
           </AutoLayout>
-          {isMoving && moveSelectedUp != null && moveSelectedDown != null && (
+          {isEditing && moveSelectedUp != null && moveSelectedDown != null && (
             <AutoLayout name="MoveButtonsRow" spacing={8} verticalAlignItems="center">
               <AutoLayout
                 name="MoveUpButton"

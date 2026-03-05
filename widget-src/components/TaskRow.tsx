@@ -21,7 +21,6 @@ interface TaskRowProps {
   tasks: TaskItem[];
   isEditing: boolean;
   isRemoving: boolean;
-  isMoving: boolean;
   moveSelectedIds: string[];
   onToggleMoveSelected: (id: string) => void;
   isDark: boolean;
@@ -34,7 +33,6 @@ export function TaskRow({
   tasks,
   isEditing,
   isRemoving,
-  isMoving,
   moveSelectedIds,
   onToggleMoveSelected,
   isDark,
@@ -277,7 +275,7 @@ export function TaskRow({
         </AutoLayout>
 
         {/* Move checkbox (move mode only) — select task for group move */}
-        {isMoving && (
+        {isEditing && (
           <AutoLayout
             name="MoveCheckbox"
             width={20}
@@ -302,12 +300,11 @@ export function TaskRow({
           <AutoLayout
             name="MergeUpButton"
             positioning="absolute"
-            x={{ type: 'right', offset: 12 }}
+            x={{ type: 'center', offset: 0 }}
             y={{ type: 'top', offset: -13 }}
             padding={6}
             cornerRadius={100}
             fill={t.floatBtn}
-            stroke={t.border}
             effect={{
               type: "drop-shadow",
               color: t.shadow,
