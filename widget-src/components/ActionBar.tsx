@@ -286,24 +286,61 @@ export function ActionBar({
         </AutoLayout>
       )}
 
-      {/* Undo button — right-aligned when Edit mode (same position as Export) */}
+      {/* Undo + Move buttons — right-aligned when Edit mode (same position as Export) */}
       {tasks.length > 0 && isEditing && (
         <AutoLayout
           width="fill-parent"
           horizontalAlignItems="end"
           verticalAlignItems="center"
-          name="UndoButtonWrap"
+          name="UndoAndMoveWrap"
         >
           <AutoLayout
-            name="UndoButtonContainer"
-            padding={8}
-            cornerRadius={8}
-            fill={t.transparent}
-            hoverStyle={{ fill: t.surface }}
-            opacity={canUndo ? 1 : 0.5}
-            onClick={canUndo ? onUndo : undefined}
+            name="UndoAndMoveRow"
+            direction="horizontal"
+            spacing={8}
+            verticalAlignItems="center"
           >
-            <SVG src={ICON_UNDO} />
+            <AutoLayout
+              name="UndoButtonContainer"
+              padding={8}
+              cornerRadius={8}
+              fill={t.transparent}
+              hoverStyle={{ fill: t.surface }}
+              opacity={canUndo ? 1 : 0.5}
+              onClick={canUndo ? onUndo : undefined}
+            >
+              <SVG src={ICON_UNDO} />
+            </AutoLayout>
+            {moveSelectedUp != null && moveSelectedDown != null && (
+              <AutoLayout name="MoveButtonsRow" spacing={8} verticalAlignItems="center">
+                <AutoLayout
+                  name="MoveUpButton"
+                  width={28}
+                  height={28}
+                  cornerRadius={6}
+                  fill={t.move}
+                  horizontalAlignItems="center"
+                  verticalAlignItems="center"
+                  opacity={canMoveUp ? 1 : 0.5}
+                  onClick={canMoveUp ? moveSelectedUp : undefined}
+                >
+                  <SVG name="MoveUpIcon" src={ICON_ARROW_UP_WHITE} />
+                </AutoLayout>
+                <AutoLayout
+                  name="MoveDownButton"
+                  width={28}
+                  height={28}
+                  cornerRadius={6}
+                  fill={t.move}
+                  horizontalAlignItems="center"
+                  verticalAlignItems="center"
+                  opacity={canMoveDown ? 1 : 0.5}
+                  onClick={canMoveDown ? moveSelectedDown : undefined}
+                >
+                  <SVG name="MoveDownIcon" src={ICON_ARROW_DOWN_WHITE} />
+                </AutoLayout>
+              </AutoLayout>
+            )}
           </AutoLayout>
         </AutoLayout>
       )}
@@ -342,7 +379,7 @@ export function ActionBar({
       )}
       </AutoLayout>
 
-      {/* Tooltip bar: simple guide for current mode; Move mode adds Up/Down buttons aligned right */}
+      {/* Tooltip bar: simple guide for current mode */}
       {tasks.length > 0 && modeTooltip && (
         <AutoLayout
           name="ModeTooltipBar"
@@ -362,36 +399,6 @@ export function ActionBar({
               {modeTooltip}
             </Text>
           </AutoLayout>
-          {isEditing && moveSelectedUp != null && moveSelectedDown != null && (
-            <AutoLayout name="MoveButtonsRow" spacing={8} verticalAlignItems="center">
-              <AutoLayout
-                name="MoveUpButton"
-                width={28}
-                height={28}
-                cornerRadius={6}
-                fill={t.move}
-                horizontalAlignItems="center"
-                verticalAlignItems="center"
-                opacity={canMoveUp ? 1 : 0.5}
-                onClick={canMoveUp ? moveSelectedUp : undefined}
-              >
-                <SVG name="MoveUpIcon" src={ICON_ARROW_UP_WHITE} />
-              </AutoLayout>
-              <AutoLayout
-                name="MoveDownButton"
-                width={28}
-                height={28}
-                cornerRadius={6}
-                fill={t.move}
-                horizontalAlignItems="center"
-                verticalAlignItems="center"
-                opacity={canMoveDown ? 1 : 0.5}
-                onClick={canMoveDown ? moveSelectedDown : undefined}
-              >
-                <SVG name="MoveDownIcon" src={ICON_ARROW_DOWN_WHITE} />
-              </AutoLayout>
-            </AutoLayout>
-          )}
         </AutoLayout>
       )}
     </AutoLayout>
