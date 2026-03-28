@@ -9,7 +9,9 @@
     "lint": "eslint --ext .ts,.tsx --ignore-pattern node_modules .",
     "lint:fix": "eslint --ext .ts,.tsx --ignore-pattern node_modules --fix .",
     "tsc": "tsc --noEmit -p widget-src",
-    "watch": "npm run build -- --watch"
+    "watch": "npm run build -- --watch",
+    "watch:web": "node scripts/watch-web.mjs",
+    "watch:all": "node scripts/watch-all.mjs"
   },
   "author": "Inuris",
   "license": "MIT",
