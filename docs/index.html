@@ -106,7 +106,41 @@
     }
     .action-bar-row {
       display: flex;
-      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+    }
+    .action-bar-row--main {
+      flex-wrap: nowrap;
+      width: 100%;
+      overflow-x: auto;
+      overflow-y: visible;
+    }
+    .action-bar-left {
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: center;
+      gap: 12px;
+      flex: 0 1 auto;
+      min-width: 0;
+    }
+    .action-bar-spacer {
+      flex: 1 1 0;
+      min-width: 4px;
+    }
+    .action-bar-end {
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+      flex: 0 0 auto;
+    }
+    .action-bar-end.links {
+      gap: 16px;
+    }
+    .action-bar-toggles {
+      display: flex;
+      flex-wrap: nowrap;
       align-items: center;
       gap: 12px;
     }
@@ -166,11 +200,10 @@
 
     .action-bar-links {
       display: flex;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
       align-items: center;
       justify-content: flex-end;
       gap: 16px;
-      width: 100%;
     }
     .link-muted {
       background: none;
@@ -199,8 +232,9 @@
 
     .move-btns {
       display: flex;
+      flex-wrap: nowrap;
+      align-items: center;
       justify-content: flex-end;
-      width: 100%;
       gap: 8px;
     }
     .move-btn {
@@ -223,7 +257,6 @@
     .export-wrap {
       display: flex;
       justify-content: flex-end;
-      width: 100%;
     }
     .export-btn {
       padding: 8px;
@@ -353,16 +386,18 @@
     .task-readonly.child:not(.checked) { color: var(--t-task-child); }
     .task-edit {
       width: 100%;
-      min-height: 2.5em;
+      min-height: 48px;
       padding: 0;
       border: none;
       background: transparent;
       font-family: inherit;
       font-size: 15px;
       line-height: 1.5;
-      resize: vertical;
+      resize: none;
+      overflow: hidden;
       color: inherit;
       outline: none;
+      box-sizing: border-box;
     }
     .task-edit.parent { font-weight: 600; }
     .task-edit.checked {

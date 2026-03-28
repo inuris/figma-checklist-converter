@@ -483,6 +483,12 @@
     w.innerHTML = html.trim();
     return w.firstElementChild;
   }
+  function fitTaskTextarea(ta) {
+    const lh = parseFloat(window.getComputedStyle(ta).lineHeight) || 22.5;
+    const minH = Math.max(48, lh * 2);
+    ta.style.height = "auto";
+    ta.style.height = `${Math.max(minH, ta.scrollHeight)}px`;
+  }
   function render() {
     const t = getTheme(state.isDark);
     applyThemeVars(t, state.isDark);
@@ -537,19 +543,18 @@
     const ab = document.createElement("div");
     ab.className = "action-bar";
     const row1 = document.createElement("div");
-    row1.className = "action-bar-row";
+    row1.className = "action-bar-row action-bar-row--main";
+    const left = document.createElement("div");
+    left.className = "action-bar-left";
     const addBtn = document.createElement("button");
     addBtn.type = "button";
     addBtn.className = "btn-add-items";
     addBtn.append(elFromHtml(ICON_PLUS), document.createTextNode(" Add Items"));
     addBtn.addEventListener("click", () => openAddModal());
-    row1.append(addBtn);
+    left.append(addBtn);
     if (hasTasks) {
       const toggles = document.createElement("div");
-      toggles.style.display = "flex";
-      toggles.style.flexWrap = "wrap";
-      toggles.style.gap = "12px";
-      toggles.style.alignItems = "center";
+      toggles.className = "action-bar-toggles";
       const editWrap = document.createElement("div");
       editWrap.className = "toggle-group";
       editWrap.setAttribute("role", "button");
@@ -568,7 +573,7 @@
         }
       });
       const editCap = document.createElement("div");
-      editCap.className = "capsule" + (state.isEditing ? " on-move" : " off") + (state.isEditing ? "" : "");
+      editCap.className = "capsule" + (state.isEditing ? " on-move" : " off");
       if (state.isEditing) {
         editCap.innerHTML = `<div class="capsule-knob move"></div><span class="label">Edit</span>`;
       } else {
@@ -600,9 +605,13 @@
       }
       delWrap.append(delCap);
       toggles.append(editWrap, delWrap);
-      row1.append(toggles);
+      left.append(toggles);
     }
-    ab.append(row1);
+    const spacer = document.createElement("div");
+    spacer.className = "action-bar-spacer";
+    spacer.setAttribute("aria-hidden", "true");
+    const end = document.createElement("div");
+    end.className = "action-bar-end";
     if (hasTasks && state.isRemoving) {
       const links = document.createElement("div");
       links.className = "action-bar-links";
@@ -627,9 +636,9 @@
         setTasksWithHistory([]);
       });
       links.append(clearAll);
-      ab.append(links);
-    }
-    if (hasTasks && state.isEditing) {
+      end.classList.add("links");
+      end.append(links);
+    } else if (hasTasks && state.isEditing) {
       const mw = document.createElement("div");
       mw.className = "move-btns";
       const up = document.createElement("button");
@@ -647,9 +656,8 @@
       down.append(elFromHtml(ICON_ARROW_DOWN_WHITE));
       down.addEventListener("click", () => canMove && moveSelectedDown());
       mw.append(up, down);
-      ab.append(mw);
-    }
-    if (hasTasks && !state.isEditing && !state.isRemoving) {
+      end.append(mw);
+    } else if (hasTasks && !state.isEditing && !state.isRemoving) {
       const ew = document.createElement("div");
       ew.className = "export-wrap";
       const ex = document.createElement("button");
@@ -659,14 +667,16 @@
       ex.append(elFromHtml(ICON_EXPORT));
       ex.addEventListener("click", () => openExportModal());
       ew.append(ex);
-      ab.append(ew);
+      end.append(ew);
     }
+    row1.append(left, spacer, end);
+    ab.append(row1);
     if (modeTooltip) {
       const tip = document.createElement("div");
       tip.className = "mode-tooltip";
-      const left = document.createElement("span");
-      left.textContent = modeTooltip.left;
-      tip.append(left);
+      const left2 = document.createElement("span");
+      left2.textContent = modeTooltip.left;
+      tip.append(left2);
       if (modeTooltip.right) {
         const right = document.createElement("span");
         right.textContent = modeTooltip.right;
@@ -754,7 +764,8 @@
           const ta = document.createElement("textarea");
           ta.className = "task-edit" + (task.isChild ? " child" : " parent") + (task.checked ? " checked" : "");
           ta.value = task.text;
-          ta.rows = Math.min(8, Math.max(2, task.text.split("\n").length));
+          ta.rows = 1;
+          ta.addEventListener("input", () => fitTaskTextarea(ta));
           const commitEdit = () => {
             const newText = ta.value;
             const copy = cloneTasks(state.tasks);
@@ -783,6 +794,7 @@
           };
           ta.addEventListener("blur", commitEdit);
           main.append(ta);
+          queueMicrotask(() => fitTaskTextarea(ta));
         } else {
           const ro = document.createElement("div");
           ro.className = "task-readonly" + (task.isChild ? " child" : " parent") + (task.checked ? " checked" : "");
@@ -822,6 +834,11 @@
     grad.append(inner);
     page.append(grad);
     root.append(page);
+    if (state.isEditing) {
+      requestAnimationFrame(() => {
+        root.querySelectorAll(".task-edit").forEach(fitTaskTextarea);
+      });
+    }
   }
   render();
 })();
