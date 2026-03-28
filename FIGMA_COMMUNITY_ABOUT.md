@@ -3,7 +3,7 @@
 Turns any pasted or typed text into **interactive, trackable tasks** - right on your canvas.
 
 **🌐 Try it in the browser** (no install):  
-https://inuris.github.io/figma-checklist-converter  
+https://inuris.github.io/figma-checklist  
 
 ---
 

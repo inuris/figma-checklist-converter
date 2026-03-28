@@ -8,7 +8,7 @@ Turn messy notes into a **living checklist**—without leaving Figma or FigJam. 
 
 Want a quick spin **outside** Figma? The same parsing rules work in a lightweight web version—everything stays in your browser (localStorage only):
 
-**[https://inuris.github.io/figma-checklist-converter](https://inuris.github.io/figma-checklist-converter)**
+**[https://inuris.github.io/figma-checklist](https://inuris.github.io/figma-checklist)**
 
 ---
 
@@ -22,7 +22,7 @@ Community **About** copy is in **[`FIGMA_COMMUNITY_ABOUT.md`](FIGMA_COMMUNITY_AB
 
 | Channel | **Widget (Figma / FigJam)** | **Web (GitHub Pages)** |
 |---------|----------------------------|-------------------------|
-| **Where** | On the canvas | [inuris.github.io/figma-checklist-converter](https://inuris.github.io/figma-checklist-converter) |
+| **Where** | On the canvas | [inuris.github.io/figma-checklist](https://inuris.github.io/figma-checklist) |
 | **Storage** | Saved with the widget | `localStorage` in your browser |
 | **Code** | `widget-src/` (primary) | `web/` + `shared/` parser |
 
