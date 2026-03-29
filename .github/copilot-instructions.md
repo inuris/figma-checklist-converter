@@ -85,10 +85,41 @@ Implemented inside [widget-src/components/TaskRow.tsx](widget-src/components/Tas
 - All SVG icon strings are in [widget-src/constants/icons.ts](widget-src/constants/icons.ts) — import by name, never inline.
 - All color values are in [widget-src/constants/colors.ts](widget-src/constants/colors.ts) — never hardcode hex values in components.
 
+## Behavior Invariants
+
+### Parent/Child Semantics
+- `TaskItem.isChild === true` means sub-task; `false`/`undefined` means parent.
+- In `TaskRow`, always preserve the three-way checkbox rule:
+  - Checking a parent checks all its immediate children.
+  - If all children under a parent are checked, the parent becomes checked.
+  - Unchecking any child must uncheck the parent.
+
+### Text-to-Tasks
+- Always reuse and extend `parseTasks` in `widget-src/utils/parseTasks.ts` — never duplicate parsing logic in components.
+- Keep `parseTasks` a **pure function** that only depends on its arguments (no side effects, no module-level state).
+
+## Component Responsibilities
+- **`Header`**: renders title, subtitle, and theme toggle only — no task mutation logic.
+- **`ActionBar`**: owns high-level actions (add items, toggle edit/remove modes, clear/delete completed, export). Parsing and formatting helpers belong in `utils/`, not here.
+- **`TaskRow`**: owns checkbox behavior, indent/outdent, text editing, merge-up, and URL chips. Always follow the deep-copy pattern when mutating the `tasks` array and keep parent/child behavior consistent.
+
+## Tooling & Quality
+- Run `npm run lint` / `npm run lint:fix` to keep ESLint (TypeScript + Figma rules) passing.
+- Run `npm run tsc` after changes to keep TypeScript clean.
+- Prefer small, focused components and utilities over large, monolithic files.
+- Use clear names; avoid clever one-liners that obscure intent for designers and developers who may not be TypeScript experts.
+
 ## Developer Workflows
 - **Development**: Run `npm run watch` to automatically recompile on save.
 - **Type Checking**: Run `npm run tsc` to check for TypeScript errors across all files.
 - **Building**: `npm run build` generates the final production bundle.
+
+## Scoped Instructions
+Additional file-type-specific rules live in `.github/instructions/`:
+- `widget-ts.instructions.md` — TypeScript/TSX coding conventions (applied to `widget-src/**/*.{ts,tsx}`)
+- `widget-ui-html.instructions.md` — HTML modal rules (applied to `widget-src/ui/*.html`)
+
+These files are the Copilot equivalent of the Cursor rules in `.cursor/rules/`. Keep both in sync when architecture or patterns change.
 
 ## Folders to Ignore
 - `dist/`
