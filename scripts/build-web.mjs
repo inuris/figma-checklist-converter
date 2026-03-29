@@ -8,6 +8,8 @@ const docs = join(root, 'docs');
 
 mkdirSync(docs, { recursive: true });
 copyFileSync(join(root, 'web', 'index.html'), join(docs, 'index.html'));
+copyFileSync(join(root, 'assets', 'icon.svg'), join(docs, 'icon.svg'));
+copyFileSync(join(root, 'assets', 'icon.png'), join(docs, 'icon.png'));
 writeFileSync(join(docs, '.nojekyll'), '');
 
 await esbuild.build({
