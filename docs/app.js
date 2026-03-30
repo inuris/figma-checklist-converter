@@ -429,11 +429,25 @@
   // widget-src/utils/parseUrls.ts
   var URL_REGEX = /https?:\/\/[^\s"'<>)\]]+/gi;
   var TRAILING_PUNCT_REGEX = /[.,;:!?]+$/;
+  var TRUNCATION_SUFFIX_REGEX = /(\.\.\.|…)$/;
   function extractUrls(text) {
     const matches = text.match(URL_REGEX);
     if (!matches) return [];
-    const normalizedUrls = matches.map((url) => url.replace(TRAILING_PUNCT_REGEX, ""));
-    return [...new Set(normalizedUrls)];
+    const result = [];
+    let lastTruncatedPrefix = null;
+    for (const raw of matches) {
+      const truncationMatch = TRUNCATION_SUFFIX_REGEX.exec(raw);
+      const isTruncated = truncationMatch !== null;
+      const withoutTrunc = isTruncated ? raw.slice(0, raw.length - truncationMatch[0].length) : raw;
+      const url = withoutTrunc.replace(TRAILING_PUNCT_REGEX, "");
+      if (lastTruncatedPrefix !== null && url.includes(lastTruncatedPrefix)) {
+        result[result.length - 1] = url;
+      } else if (!result.includes(url)) {
+        result.push(url);
+      }
+      lastTruncatedPrefix = isTruncated ? url : null;
+    }
+    return result;
   }
   function formatUrlLabel(url, maxLength = 50) {
     const stripped = url.replace(/^https?:\/\//, "");
