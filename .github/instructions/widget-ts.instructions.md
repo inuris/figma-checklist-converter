@@ -46,3 +46,10 @@ applyTo: widget-src/**/*.{ts,tsx}
 - Always obtain colors and theme values via `getTheme(isDark)` and constants in `widget-src/constants/colors.ts`.
 - Always obtain icons via `ICON_*` imports from `widget-src/constants/icons.ts`.
 - Do not hardcode hex values or inline SVGs into components; add them to the constants files instead.
+
+## Coding Agent Discipline
+
+- **Think first**: Before editing a component, identify which file owns the behaviour. If ownership is ambiguous, ask — don't split logic across files arbitrarily.
+- **Stay surgical**: Edit only the files and lines required by the task. Do not reformat, rename, or reorganise surrounding code as a side effect.
+- **Stay simple**: No new props, state keys, or helper functions unless the task explicitly requires them. Prefer extending existing utilities (`parseTasks`, `getTheme`, etc.) over creating new ones.
+- **Verify after every change**: Run `npm run tsc` and `npm run lint` after each edit. Do not batch multiple changes before type-checking — fix errors incrementally.

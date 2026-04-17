@@ -124,3 +124,63 @@ These files are the Copilot equivalent of the Cursor rules in `.cursor/rules/`. 
 ## Folders to Ignore
 - `dist/`
 - `node_modules/`
+
+---
+
+## Coding Agent Behavior
+
+Derived from [Karpathy's observations](https://x.com/karpathy/status/2015883857489522876) on common LLM coding pitfalls. These principles apply to every change in this repo.
+
+### 1. Think Before Coding
+**Don't assume. Don't hide confusion. Surface tradeoffs.**
+
+- State assumptions explicitly before implementing. If uncertain about intent, ask rather than guess.
+- When multiple valid interpretations exist, present them — don't silently pick one and run with it.
+- If a simpler approach exists, say so and push back rather than implementing the requested-but-overcomplicated path.
+- If something is unclear (e.g. which component owns a behaviour, how a Figma API works), stop and name the confusion before proceeding.
+
+### 2. Simplicity First
+**Minimum code that solves the problem. Nothing speculative.**
+
+- No features, props, or state beyond what was asked.
+- No abstractions for single-use code (e.g. don't extract a helper used in exactly one place).
+- No "future-proofing" or added configurability that wasn't requested.
+- No error handling for scenarios that cannot occur given the existing data model.
+- If an implementation could be half the length with the same behaviour, prefer the shorter one.
+
+*Self-check: Would a senior engineer reviewing this diff say it's overcomplicated? If yes, simplify.*
+
+### 3. Surgical Changes
+**Touch only what you must. Clean up only your own mess.**
+
+When editing existing code:
+- Don't "improve" adjacent code, formatting, or comments that aren't part of the task.
+- Don't refactor working code as a side effect — file a separate note if something seems worth improving.
+- Match the existing style and naming conventions, even if you'd do it differently from scratch.
+- If you notice unrelated dead code (unused import, orphaned constant), **mention it in a comment** — don't delete it silently.
+
+When your changes create orphans:
+- Remove imports, variables, or helpers that **your changes** made unused.
+- Don't clean up pre-existing dead code unless explicitly asked.
+
+*Self-check: Every changed line should trace directly to the user's request.*
+
+### 4. Goal-Driven Execution
+**Define success criteria. Loop until verified.**
+
+For any non-trivial task, state a brief plan with a verifiable outcome before writing code:
+```
+1. [What] → verify: [how to confirm it worked]
+2. [What] → verify: [how to confirm it worked]
+```
+
+For this project, typical verify steps are:
+- `npm run tsc` passes with no new errors.
+- `npm run lint` passes with no new warnings.
+- The widget renders and behaves correctly in Figma (describe the manual check).
+
+Strong success criteria enable autonomous looping. Vague criteria ("make it work") stall progress and require repeated clarification.
+
+---
+
+*Tradeoff: These guidelines bias toward caution over speed. For trivial tasks (single typo fix, obvious one-liner), use judgment — not every change needs full rigor.*
