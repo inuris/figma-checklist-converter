@@ -12,7 +12,6 @@ import {
   ICON_LINK,
   ICON_LINK_CHECKED_DARK,
   ICON_LINK_CHECKED_LIGHT,
-  ICON_MERGE,
   ICON_OUTDENT,
   ICON_REMOVE,
 } from '../constants/icons';
@@ -307,33 +306,6 @@ export function TaskRow({
           </AutoLayout>
         )}
 
-        {/* Merge Up button (edit mode only, not first item) */}
-        {isEditing && index > 0 && (
-          <AutoLayout
-            name="MergeUpButton"
-            positioning="absolute"
-            x={{ type: 'center', offset: 0 }}
-            y={{ type: 'top', offset: LAYOUT.task.mergeTop }}
-            padding={LAYOUT.task.mergePad}
-            cornerRadius={100}
-            fill={t.floatBtn}
-            effect={{
-              type: "drop-shadow",
-              color: t.shadow,
-              offset: { x: 0, y: LAYOUT.task.mergeShadowY },
-              blur: LAYOUT.task.mergeShadowBlur,
-            }}
-            hoverStyle={{ fill: t.floatBtnHover }}
-            onClick={() => {
-              const copy: TaskItem[] = tasks.map(t => ({ ...t }));
-              copy[index - 1].text += "\n" + copy[index].text;
-              copy.splice(index, 1);
-              setTasks(copy);
-            }}
-          >
-            <SVG name="MergeUpIcon" src={ICON_MERGE} />
-          </AutoLayout>
-        )}
 
       </AutoLayout>
     </AutoLayout>

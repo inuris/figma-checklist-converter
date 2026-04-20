@@ -26,16 +26,33 @@ function TextToChecklistWidget() {
   const theme = getTheme(isDark);
 
   const MAX_UNDO = 50;
+
   const setTasksWithHistory = (newTasks: TaskItem[]) => {
     setTaskHistory([...taskHistory.slice(-(MAX_UNDO - 1)), JSON.parse(JSON.stringify(tasks))]);
     setTasks(newTasks);
   };
+
   const canUndo = taskHistory.length > 0;
   const undo = () => {
     if (taskHistory.length === 0) return;
     const prev = taskHistory[taskHistory.length - 1];
     setTaskHistory(taskHistory.slice(0, -1));
     setTasks(prev);
+  };
+
+  // Merge all selected rows into the first selected row (in order), then deselect.
+  const mergeSelected = () => {
+    if (moveSelectedIds.length < 2) return;
+    const selectedSet = new Set(moveSelectedIds);
+    const copy = tasks.map(t => ({ ...t }));
+    const indices = copy.map((t, i) => selectedSet.has(t.id) ? i : -1).filter(i => i >= 0).sort((a, b) => a - b);
+    const firstIdx = indices[0];
+    const merged = indices.map(i => copy[i].text).join('\n');
+    copy[firstIdx].text = merged;
+    // Remove the rest in reverse order to keep indices stable
+    for (let i = indices.length - 1; i >= 1; i--) copy.splice(indices[i], 1);
+    setTasksWithHistory(copy);
+    setMoveSelectedIds([]);
   };
 
   // Indices of tasks that are checked for move (0-based) — used when Edit mode is on
@@ -124,6 +141,8 @@ function TextToChecklistWidget() {
           moveSelectedDown={moveSelectedDown}
           canMoveUp={canMoveUp}
           canMoveDown={canMoveDown}
+          mergeSelected={mergeSelected}
+          canMerge={moveSelectedIds.length >= 2}
         />
 
         {tasks.length > 0 ? (

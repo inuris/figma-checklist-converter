@@ -7,7 +7,7 @@ import { TaskItem } from '../types';
 import { parseTasks } from '../utils/parseTasks';
 import { exportTasksAsText, buildExportHtml } from '../utils/exportTasks';
 import { getTheme } from '../utils/theme';
-import { ICON_PLUS, ICON_EXPORT, ICON_ARROW_UP_WHITE, ICON_ARROW_DOWN_WHITE } from '../constants/icons';
+import { ICON_PLUS, ICON_EXPORT, ICON_ARROW_UP_WHITE, ICON_ARROW_DOWN_WHITE, ICON_MERGE_WHITE } from '../constants/icons';
 
 interface ActionBarProps {
   tasks: TaskItem[];
@@ -22,6 +22,8 @@ interface ActionBarProps {
   moveSelectedDown?: () => void;
   canMoveUp?: boolean;
   canMoveDown?: boolean;
+  mergeSelected?: () => void;
+  canMerge?: boolean;
 }
 
 export function ActionBar({
@@ -37,6 +39,8 @@ export function ActionBar({
   moveSelectedDown,
   canMoveUp = false,
   canMoveDown = false,
+  mergeSelected,
+  canMerge = false,
 }: ActionBarProps) {
   const t = getTheme(isDark);
 
@@ -343,6 +347,21 @@ export function ActionBar({
                 >
                   <SVG name="MoveDownIcon" src={ICON_ARROW_DOWN_WHITE} />
                 </AutoLayout>
+                {mergeSelected != null && (
+                  <AutoLayout
+                    name="MergeButton"
+                    width={LAYOUT.moveButton.size}
+                    height={LAYOUT.moveButton.size}
+                    cornerRadius={LAYOUT.moveButton.radius}
+                    fill={t.move}
+                    horizontalAlignItems="center"
+                    verticalAlignItems="center"
+                    opacity={canMerge ? 1 : 0.5}
+                    onClick={canMerge ? mergeSelected : undefined}
+                  >
+                    <SVG name="MergeIcon" src={ICON_MERGE_WHITE} />
+                  </AutoLayout>
+                )}
               </>
             )}
           </AutoLayout>

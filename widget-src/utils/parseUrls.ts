@@ -19,6 +19,7 @@ const TRUNCATION_SUFFIX_REGEX = /(\.\.\.|…)$/;
  */
 
 export function extractUrls(text: string): string[] {
+  if (!text.includes('http')) return [];
   const matches = text.match(URL_REGEX);
   if (!matches) return [];
 
